@@ -5,18 +5,18 @@
 __author__ = "Kyle Negley"
 
 
-# import sys
 import argparse
 
 
 def create_parser():
     """Returns namespace object"""
     parser = argparse.ArgumentParser(
-        description="prints input and includes string methods", usage="echo.py[-h][-u][-l][-t] text")
-    parser.add_argument(
-        "-l", "--lower", action="store_true", help="lower case all characters")
+        description="prints input and includes string methods",
+        usage="echo.py [options]text")
     parser.add_argument(
         "-u", "--upper", action="store_true", help="upper case all characters")
+    parser.add_argument(
+        "-l", "--lower", action="store_true", help="lower case all characters")
     parser.add_argument(
         "-t", "--title", action="store_true", help="makes text titlecase")
     parser.add_argument(
@@ -37,11 +37,14 @@ def text_manipulater(command):
 def echo_Output():
     args = create_parser()
     # print(args.__dict__)
-
+    # print(args)
+    answer = ""
     for arg, value in args.__dict__.items():
         if arg != "text" and value:
-            return(text_manipulater(arg))
-    return text_manipulater(None)
+            answer = (text_manipulater(arg))
+            # print(answer)
+
+    return answer or text_manipulater(None)
 
     # if args.lower is not None:
     #     print(args)

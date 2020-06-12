@@ -12,7 +12,7 @@ __author__ = "Kyle Negley"
 import sys
 import importlib
 import inspect
-import argparse
+# import argparse
 import unittest
 import subprocess
 from io import StringIO
@@ -82,12 +82,12 @@ class TestEcho(unittest.TestCase):
         # that will be visible to your other test methods
         pass
 
-    def test_parser(self):
-        """Check if create_parser() returns a parser object"""
-        result = self.module.create_parser()
-        self.assertIsInstance(
-            result, argparse.ArgumentParser,
-            "create_parser() function is not returning a parser object")
+    # def test_parser(self):
+    #     """Check if create_parser() returns a parser object"""
+    #     result = self.module.create_parser()
+    #     self.assertIsInstance(
+    #         result, argparse.ArgumentParser,
+    #         "create_parser() function is not returning a parser object")
 
     #
     # Students: add more parser tests here
@@ -110,14 +110,44 @@ class TestEcho(unittest.TestCase):
     def test_lower_short(self):
         """Check if short option '-l' performs lowercasing"""
         args = ["-l", "HELLO WORLD"]
-        with Capturing() as output:
-            self.module.main(args)
-        assert output, "The program did not print anything."
-        self.assertEqual(output[0], "hello world")
+        # with Capturing() as output:
+        #     self.module.main(args)
+        stdout, stderr = run_capture(self.module.__file__, args)
+        self.assertEqual(
+            stdout[0], "hello world",
+            "The program is not performing lower case"
+        )
 
-    #
-    # Students: add more cmd line options tests here.
-    #
+        # assert output, "The program did not print anything."
+        # self.assertEqual(output[0], "hello world")
+
+    def test_lower_long(self):
+        """Check if short option '-l' performs lowercasing"""
+        args = ["--lower", "HELLO WORLD"]
+        # with Capturing() as output:
+        #     self.module.main(args)
+        stdout, stderr = run_capture(self.module.__file__, args)
+        self.assertEqual(
+            stdout[0], "hello world",
+            "The program is not performing lower case"
+        )
+
+    def test_upper_long(self):
+        args = ["--upper", "heLlO worlD"]
+        stdout, stderr = run_capture(self.module.__file__, args)
+        self.assertEqual(stdout[0], "HELLO WORLD",
+                         "the program isn't capitalizing everything")
+
+    def test_upper_short(self):
+        args = ["-u", "heLlO worlD"]
+        stdout, stderr = run_capture(self.module.__file__, args)
+        self.assertEqual(stdout[0], "HELLO WORLD",
+                         "the program isn't capitalizing everything")
+
+    def multiple_options(self):
+        args = ["-tul", "heLlo WORLD"]
+        stdout, stderr = run_capture(self.module.__file__, args)
+        self.assertEqual(stdout[0], "Hello World", "not doing title right")
 
 
 if __name__ == '__main__':
